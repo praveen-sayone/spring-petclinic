@@ -20,12 +20,24 @@ public class PetDetailController {
 	private PetDetailService service;
 	private PetDetailRepository petRepo;
 
+	/**
+	 * Creates a PetDetailController with the required repository and service dependencies.
+	 */
 	@Autowired
 	public PetDetailController(PetDetailRepository petRepo, PetDetailService service) {
 		this.petRepo = petRepo;
 		this.service = service;
 	}
 
+	/**
+	 * Creates and persists a PetDetail for the pet identified by {@code petId}.
+	 *
+	 * The provided DTO's temperament, weight, and length are copied into the new PetDetail which is then saved.
+	 *
+	 * @param petId the id of the Pet to associate with the new PetDetail
+	 * @param dto   source of temperament, weight, and length values
+	 * @return the saved PetDetail wrapped in a 200 OK response
+	 */
 	@PostMapping("/{petId}")
 	@Operation(summary = "create pet details")
 	public ResponseEntity<PetDetail> createDetail(@PathVariable int petId,
@@ -40,6 +52,12 @@ public class PetDetailController {
 		return ResponseEntity.ok(service.savePetDetail(detail));
 	}
 
+	/**
+	 * Retrieve the PetDetail for a given pet.
+	 *
+	 * @param petId the identifier of the pet whose detail is requested
+	 * @return a ResponseEntity containing the PetDetail and HTTP 200 if found, or HTTP 404 if not found
+	 */
 	@GetMapping("/{petId}")
 	@Operation(summary = "Get pet details by per id")
 	public ResponseEntity<PetDetail> getDetail(@PathVariable int petId) {
@@ -47,6 +65,17 @@ public class PetDetailController {
 		return detail != null ? ResponseEntity.ok(detail) : ResponseEntity.notFound().build();
 	}
 
+	/**
+	 * Updates the PetDetail for the pet identified by {@code petId} using values from the provided DTO.
+	 *
+	 * Builds a new PetDetail from the DTO (temperament, weight, length), associates it with the existing Pet,
+	 * and delegates the update to the service layer. Returns the updated PetDetail in a 200 OK response.
+	 *
+	 * @param petId the identifier of the pet whose detail will be updated
+	 * @param dto   DTO containing the temperament, weight, and length to apply
+	 * @return a ResponseEntity containing the updated PetDetail and HTTP status 200 (OK)
+	 * @throws ResourceNotFoundException if no Pet exists with the given {@code petId}
+	 */
 	@PutMapping("/{petId}")
 	@Operation(summary = "Update pet detail")
 	public ResponseEntity<PetDetail> updateDetail(@PathVariable int petId,
@@ -64,6 +93,12 @@ public class PetDetailController {
 		return ResponseEntity.ok(service.updatePetDetail(petId, detail));
 	}
 
+	/**
+	 * Delete the PetDetail associated with the given pet id.
+	 *
+	 * @param petId the id of the pet whose detail should be removed
+	 * @return a 204 No Content response when deletion completes
+	 */
 	@DeleteMapping("/{petId}")
 	@Operation(summary = "Delete pet detail by pet id")
 	public ResponseEntity<Void> deleteDetail(@PathVariable int petId) {

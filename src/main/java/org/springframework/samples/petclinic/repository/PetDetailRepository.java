@@ -9,6 +9,12 @@ import java.util.Optional;
 
 @Repository
 public interface PetDetailRepository extends JpaRepository<PetDetail, Integer> {
-	Optional<PetDetail> findByPetId(int petId);
+	/**
+ * Finds the PetDetail associated with the given pet identifier.
+ *
+ * @param petId the identifier of the Pet to look up
+ * @return an Optional containing the PetDetail if found, or Optional.empty() if none exists
+ */
+Optional<PetDetail> findByPetId(int petId);
 }
 
